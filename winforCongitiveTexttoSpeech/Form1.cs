@@ -94,10 +94,13 @@ namespace winforCongitiveTexttoSpeech
 			txtstatus.Text = "Starting Authtentication";
 			string accessToken;
 
-			// Note: The way to get api key:
-			// Free: https://www.microsoft.com/cognitive-services/en-us/subscriptions?productId=/products/Bing.Speech.Preview
-			// Paid: https://portal.azure.com/#create/Microsoft.CognitiveServices/apitype/Bing.Speech/pricingtier/S0
-			Authentication auth = new Authentication("AddYourAPIKEYHere");
+      // Note: The way to get api key:
+      // Free: https://www.microsoft.com/cognitive-services/en-us/subscriptions?productId=/products/Bing.Speech.Preview
+      // Paid: https://portal.azure.com/#create/Microsoft.CognitiveServices/apitype/Bing.Speech/pricingtier/S0
+
+      var apiKey = "a5ccddf81d5a465ab84e4241921e487a";
+
+      Authentication auth = new Authentication(apiKey);
 
 			try
 			{
@@ -114,7 +117,8 @@ namespace winforCongitiveTexttoSpeech
 
 			txtstatus.Text = "Starting TTSSample request code execution.";
 
-			string requestUri = "https://speech.platform.bing.com/synthesize";
+      //https://api.cognitive.microsoft.com/sts/v1.0
+      string requestUri = "https://speech.platform.bing.com/synthesize";
 
 			var cortana = new Synthesize();
 
