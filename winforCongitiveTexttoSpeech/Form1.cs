@@ -151,7 +151,7 @@ namespace winforCongitiveTexttoSpeech
 
 		private void cboServiceName_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			cboLocale.SelectedIndex = cboServiceName.SelectedIndex;
+			//cboLocale.SelectedIndex = cboServiceName.SelectedIndex;
 		}
 	}
 }
