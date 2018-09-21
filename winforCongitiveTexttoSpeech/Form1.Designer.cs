@@ -48,7 +48,10 @@
             "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)",
             "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)",
             "Microsoft Server Speech Text to Speech Voice (de-DE, HeddaRUS)",
-            "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)"
+            "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)",
+            "Microsoft Server Speech Text to Speech Voice (de-AT, Michael)",
+            "Microsoft Server Speech Text to Speech Voice (de-CH, Karsten)"
+
       });
 
       this.cboServiceName.Location = new System.Drawing.Point(440, 12);
