@@ -13,3 +13,9 @@ Endpoint: https://api.cognitive.microsoft.com/sts/v1.0
 Key 1: a5ccddf81d5a465ab84e4241921e487a
 
 Key 2: 47fd6a7914b8497a9128887c0effd2a1
+
+speaker list:
+https://docs.microsoft.com/de-de/azure/cognitive-services/speech/api-reference-rest/bingvoiceoutput
+
+interesting
+https://www.windowscentral.com/comprehensive-list-cortana-voice-commands-windows-10-0

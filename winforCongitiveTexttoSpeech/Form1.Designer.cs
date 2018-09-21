@@ -45,8 +45,13 @@
 			this.cboServiceName.Items.AddRange(new object[] {
             "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)",
             "Microsoft Server Speech Text to Speech Voice (ko-KR, HeamiRUS)",
-            "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)"});
-			this.cboServiceName.Location = new System.Drawing.Point(440, 12);
+            "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)",
+            "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)",
+            "Microsoft Server Speech Text to Speech Voice (de-DE, HeddaRUS)",
+            "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)"
+      });
+
+      this.cboServiceName.Location = new System.Drawing.Point(440, 12);
 			this.cboServiceName.Name = "cboServiceName";
 			this.cboServiceName.Size = new System.Drawing.Size(608, 20);
 			this.cboServiceName.TabIndex = 7;
@@ -89,7 +94,8 @@
 			this.cboLocale.Items.AddRange(new object[] {
             "en-US",
             "ko-KR",
-            "ta-IN"});
+            "ta-IN",
+            "de-DE"});
 			this.cboLocale.Location = new System.Drawing.Point(145, 12);
 			this.cboLocale.Name = "cboLocale";
 			this.cboLocale.Size = new System.Drawing.Size(121, 20);
