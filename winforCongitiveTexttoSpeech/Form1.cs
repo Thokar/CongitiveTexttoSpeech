@@ -52,8 +52,17 @@ namespace winforCongitiveTexttoSpeech
 
 				readStream.Close();
 				writeStream.Close();
-				SoundPlayer player = new System.Media.SoundPlayer(filename);
-				player.PlaySync();
+
+        // SoundplayerlocationChanged
+        // https://docs.microsoft.com/de-de/dotnet/api/system.media.soundplayer?view=netframework-4.7.2
+
+        // Better use NAudio
+        // https://stackoverflow.com/questions/22173273/play-sound-in-both-speaker-and-headset-wpf
+        // http://mark-dot-net.blogspot.com/2011/05/naudio-audio-output-devices.html
+
+        SoundPlayer player = new System.Media.SoundPlayer(filename);
+        player.SoundLocationChanged += new EventHandler(this.player_LocationChanged);
+        player.PlaySync();
 				 
 			}
 			catch (Exception EX)
@@ -64,13 +73,29 @@ namespace winforCongitiveTexttoSpeech
 
 			
 		}
+    private void player_LocationChanged(object sender, EventArgs e)
+    {
+      //string message = String.Format("SoundLocationChanged: {0}",
+      //    player.SoundLocation);
+      //ReportStatus(message);
+    }
 
-		/// <summary>
-		/// Handler an error when a TTS request failed.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="GenericEventArgs{Exception}"/> instance containing the event data.</param>
-		private  void ErrorHandler(object sender, GenericEventArgs<Exception> e)
+    public void player_LoadCompleted(object sender,
+          AsyncCompletedEventArgs e)
+    {
+      //string message = String.Format("LoadCompleted: {0}",
+      //    this.filepathTextbox.Text);
+      //ReportStatus(message);
+      //EnablePlaybackControls(true);
+    }
+
+
+    /// <summary>
+    /// Handler an error when a TTS request failed.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="GenericEventArgs{Exception}"/> instance containing the event data.</param>
+    private  void ErrorHandler(object sender, GenericEventArgs<Exception> e)
 		{
 			txtstatus.Text= "Unable to complete the TTS request: [{0}]" + e.ToString();
 		}
