@@ -195,26 +195,15 @@ namespace winforCongitiveTexttoSpeech
     public void detectDevices(string filename)
     {
       int waveOutDevices = WaveOut.DeviceCount;
-      switch (waveOutDevices)
+
+      for (int i = 0; i < waveOutDevices; i++)
       {
-        case 1:
-          var wave1 = new WaveOut();
-          wave1.DeviceNumber = 0;
-          playSound(0, filename);
-
-          break;
-        case 2:
-          var wave2 = new WaveOut();
-          wave2.DeviceNumber = 0;
-          playSound(0, filename);
-
-          var wave3 = new WaveOut();
-          wave3.DeviceNumber = 1;
-          playSound(1, filename);
-
-          break;
-
+        var wave1 = new WaveOut();
+        wave1.DeviceNumber = 0;
+        playSound(0, filename);
+        wave1.Dispose();
       }
+
     }
 
     public void playSound(int deviceNumber, string fileName)
