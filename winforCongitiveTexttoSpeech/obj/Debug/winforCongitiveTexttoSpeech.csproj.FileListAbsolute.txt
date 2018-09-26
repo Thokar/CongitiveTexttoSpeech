@@ -30,3 +30,5 @@ D:\FilesToGo\Angular\FullStackApp\CongitiveTexttoSpeech\winforCongitiveTexttoSpe
 D:\FilesToGo\Angular\FullStackApp\CongitiveTexttoSpeech\winforCongitiveTexttoSpeech\bin\Debug\NAudio.dll
 D:\FilesToGo\Angular\FullStackApp\CongitiveTexttoSpeech\winforCongitiveTexttoSpeech\bin\Debug\NAudio.xml
 D:\FilesToGo\Angular\FullStackApp\CongitiveTexttoSpeech\winforCongitiveTexttoSpeech\obj\Debug\winforCongitiveTexttoSpeech.csproj.CopyComplete
+D:\FilesToGo\Angular\FullStackApp\CongitiveTexttoSpeech\winforCongitiveTexttoSpeech\bin\Debug\Microsoft.CognitiveServices.Speech.csharp.dll
+D:\FilesToGo\Angular\FullStackApp\CongitiveTexttoSpeech\winforCongitiveTexttoSpeech\bin\Debug\Microsoft.CognitiveServices.Speech.csharp.xml

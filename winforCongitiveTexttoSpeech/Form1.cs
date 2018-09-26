@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.CognitiveServices.Speech;
+using NAudio.Wave;
+using System;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Media;
-using System.Threading; 
-using System.IO;
-using NAudio.Wave;
 
 namespace winforCongitiveTexttoSpeech
 {
-	public partial class Form1 : Form
-	{
+  public partial class Form1 : Form
+  {
     private WaveFileReader waveReader;
     private WaveOut output;
 
@@ -30,33 +25,33 @@ namespace winforCongitiveTexttoSpeech
     // readStream is the stream you need to read
     // writeStream is the stream you want to write to
 
-    private  void PlayAudio(object sender, GenericEventArgs<Stream> args)
-		{ 
-			Stream readStream = args.EventData;
-			 
-			try
-			{
-				string saveTo = Path.GetDirectoryName(Application.ExecutablePath) + @"\SaveMP3File";  //Folder to Save
-				if (!Directory.Exists(saveTo))
-				{
-					Directory.CreateDirectory(saveTo);
-				}
-				string filename = saveTo + @"\Shanu" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp3"; //Save the speech as mp3 file in root folder
+    private void PlayAudio(object sender, GenericEventArgs<Stream> args)
+    {
+      Stream readStream = args.EventData;
 
-				FileStream writeStream = File.Create(filename);
+      try
+      {
+        string saveTo = Path.GetDirectoryName(Application.ExecutablePath) + @"\SaveMP3File";  //Folder to Save
+        if (!Directory.Exists(saveTo))
+        {
+          Directory.CreateDirectory(saveTo);
+        }
+        string filename = saveTo + @"\Shanu" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp3"; //Save the speech as mp3 file in root folder
 
-				int Length = 256;
-				Byte[] buffer = new Byte[Length];
-				int bytestoRead = readStream.Read(buffer, 0, Length);
-				// write the required bytes
-				while (bytestoRead > 0)
-				{
-					writeStream.Write(buffer, 0, bytestoRead);
-					bytestoRead = readStream.Read(buffer, 0, Length);
-				}
+        FileStream writeStream = File.Create(filename);
 
-				readStream.Close();
-				writeStream.Close();
+        int Length = 256;
+        Byte[] buffer = new Byte[Length];
+        int bytestoRead = readStream.Read(buffer, 0, Length);
+        // write the required bytes
+        while (bytestoRead > 0)
+        {
+          writeStream.Write(buffer, 0, bytestoRead);
+          bytestoRead = readStream.Read(buffer, 0, Length);
+        }
+
+        readStream.Close();
+        writeStream.Close();
 
         // SoundplayerlocationChanged
         // https://docs.microsoft.com/de-de/dotnet/api/system.media.soundplayer?view=netframework-4.7.2
@@ -71,16 +66,16 @@ namespace winforCongitiveTexttoSpeech
         //SoundPlayer player = new System.Media.SoundPlayer(filename);
         //player.SoundLocationChanged += new EventHandler(this.player_LocationChanged);
         //player.PlaySync();
-				 
-			}
-			catch (Exception EX)
-			{
-				txtstatus.Text = EX.Message;
-			}
-			args.EventData.Dispose();
 
-			
-		}
+      }
+      catch (Exception EX)
+      {
+        txtstatus.Text = EX.Message;
+      }
+      args.EventData.Dispose();
+
+
+    }
     private void player_LocationChanged(object sender, EventArgs e)
     {
       //string message = String.Format("SoundLocationChanged: {0}",
@@ -103,29 +98,29 @@ namespace winforCongitiveTexttoSpeech
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="GenericEventArgs{Exception}"/> instance containing the event data.</param>
-    private  void ErrorHandler(object sender, GenericEventArgs<Exception> e)
-		{
-			txtstatus.Text= "Unable to complete the TTS request: [{0}]" + e.ToString();
-		}
+    private void ErrorHandler(object sender, GenericEventArgs<Exception> e)
+    {
+      txtstatus.Text = "Unable to complete the TTS request: [{0}]" + e.ToString();
+    }
 
-		public Form1()
-		{
-			InitializeComponent();
-		}
+    public Form1()
+    {
+      InitializeComponent();
+    }
 
-		private void Form1_Load(object sender, EventArgs e)
-		{
-			cboLocale.SelectedIndex = 0;
-			cboServiceName.SelectedIndex = 0;
+    private void Form1_Load(object sender, EventArgs e)
+    {
+      cboLocale.SelectedIndex = 0;
+      cboServiceName.SelectedIndex = 0;
 
-			 
 
-		}
 
-		private void btnSpeak_Click(object sender, EventArgs e)
-		{
-			txtstatus.Text = "Starting Authtentication";
-			string accessToken;
+    }
+
+    private void btnSpeak_Click(object sender, EventArgs e)
+    {
+      txtstatus.Text = "Starting Authtentication";
+      string accessToken;
 
       // Note: The way to get api key:
       // Free: https://www.microsoft.com/cognitive-services/en-us/subscriptions?productId=/products/Bing.Speech.Preview
@@ -135,57 +130,57 @@ namespace winforCongitiveTexttoSpeech
 
       Authentication auth = new Authentication(apiKey);
 
-			try
-			{
-				accessToken = auth.GetAccessToken();
-				txtstatus.Text = "Token: {0} " + accessToken;
-			}
-			catch (Exception ex)
-			{
-				txtstatus.Text = "Failed authentication.";
-				
-				txtstatus.Text = ex.Message;
-				return;
-			}
+      try
+      {
+        accessToken = auth.GetAccessToken();
+        txtstatus.Text = "Token: {0} " + accessToken;
+      }
+      catch (Exception ex)
+      {
+        txtstatus.Text = "Failed authentication.";
 
-			txtstatus.Text = "Starting TTSSample request code execution.";
+        txtstatus.Text = ex.Message;
+        return;
+      }
+
+      txtstatus.Text = "Starting TTSSample request code execution.";
 
       //https://api.cognitive.microsoft.com/sts/v1.0
       string requestUri = "https://speech.platform.bing.com/synthesize";
 
-			var cortana = new Synthesize();
+      var cortana = new Synthesize();
 
-			cortana.OnAudioAvailable += PlayAudio;
-			cortana.OnError += ErrorHandler;
+      cortana.OnAudioAvailable += PlayAudio;
+      cortana.OnError += ErrorHandler;
 
-			// Reuse Synthesize object to minimize latency
-			cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
-			{
-				RequestUri = new Uri(requestUri),
-				// Text to be spoken.
-				Text = txtSpeak.Text,
-				VoiceType = Gender.Female,
-				// Refer to the documentation for complete list of supported locales.
-				Locale = cboLocale.SelectedItem.ToString(), //"en-US",
+      // Reuse Synthesize object to minimize latency
+      cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
+      {
+        RequestUri = new Uri(requestUri),
+        // Text to be spoken.
+        Text = txtSpeak.Text,
+        VoiceType = Gender.Female,
+        // Refer to the documentation for complete list of supported locales.
+        Locale = cboLocale.SelectedItem.ToString(), //"en-US",
 
-				// You can also customize the output voice. Refer to the documentation to view the different
-				// voices that the TTS service can output.
-				VoiceName = cboServiceName.SelectedItem.ToString(), //"Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)",
-															   // Service can return audio in different output format.
-				OutputFormat = AudioOutputFormat.Riff16Khz16BitMonoPcm,
-				AuthorizationToken = "Bearer " + accessToken,
-			}).Wait();
-		}
+        // You can also customize the output voice. Refer to the documentation to view the different
+        // voices that the TTS service can output.
+        VoiceName = cboServiceName.SelectedItem.ToString(), //"Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)",
+                                                            // Service can return audio in different output format.
+        OutputFormat = AudioOutputFormat.Riff16Khz16BitMonoPcm,
+        AuthorizationToken = "Bearer " + accessToken,
+      }).Wait();
+    }
 
-		private void cboLocale_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			cboServiceName.SelectedIndex = cboLocale.SelectedIndex;
-		}
+    private void cboLocale_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      cboServiceName.SelectedIndex = cboLocale.SelectedIndex;
+    }
 
-		private void cboServiceName_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			//cboLocale.SelectedIndex = cboServiceName.SelectedIndex;
-		}
+    private void cboServiceName_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      //cboLocale.SelectedIndex = cboServiceName.SelectedIndex;
+    }
 
     private void button1_Click(object sender, EventArgs e)
     {
@@ -198,6 +193,8 @@ namespace winforCongitiveTexttoSpeech
 
       for (int i = 0; i < waveOutDevices; i++)
       {
+        txtstatus.Text = "Using device " + i;
+
         var wave1 = new WaveOut();
         wave1.DeviceNumber = 0;
         playSound(0, filename);
@@ -233,6 +230,64 @@ namespace winforCongitiveTexttoSpeech
       {
         waveReader.Dispose();
         waveReader = null;
+      }
+    }
+
+    private void button2_Click(object sender, EventArgs e)
+    {
+       //Record().Wait();
+      var result =  Record().Result;
+
+      txtstatus.Text = result.Text;
+
+      //var t = Record();
+     // t.Start();
+    //  t.Wait();
+    //  var result = t.Result;
+      
+
+    }
+
+    public async Task<SpeechRecognitionResult> Record()
+    {
+      // Creates an instance of a speech config with specified subscription key and service region.
+      // Replace with your own subscription key and service region (e.g., "westus").
+      var config = SpeechConfig.FromSubscription("2515f320-76bd-4798-adb3-dade8f1db94e", "northeurope");
+
+      //var config = SpeechConfig.FromEndpoint(new Uri("https://northeurope.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1"), "2515f320-76bd-4798-adb3-dade8f1db94e");
+
+      // Creates a speech recognizer.
+      using (var recognizer = new SpeechRecognizer(config))
+      {
+        Console.WriteLine("Say something...");
+
+        // Performs recognition. RecognizeOnceAsync() returns when the first utterance has been recognized,
+        // so it is suitable only for single shot recognition like command or query. For long-running
+        // recognition, use StartContinuousRecognitionAsync() instead.
+        SpeechRecognitionResult result = await recognizer.RecognizeOnceAsync();
+
+        // Checks result.
+        if (result.Reason == ResultReason.RecognizedSpeech)
+        {
+          Console.WriteLine($"We recognized: {result.Text}");
+        }
+        else if (result.Reason == ResultReason.NoMatch)
+        {
+          Console.WriteLine($"NOMATCH: Speech could not be recognized.");
+        }
+        else if (result.Reason == ResultReason.Canceled)
+        {
+          var cancellation = CancellationDetails.FromResult(result);
+          Console.WriteLine($"CANCELED: Reason={cancellation.Reason}");
+
+          if (cancellation.Reason == CancellationReason.Error)
+          {
+            Console.WriteLine($"CANCELED: ErrorDetails={cancellation.ErrorDetails}");
+            Console.WriteLine($"CANCELED: Did you update the subscription info?");
+          }
+        }
+
+        return result;
       }
     }
   }
