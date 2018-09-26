@@ -10,22 +10,27 @@ using System.Windows.Forms;
 using System.Media;
 using System.Threading; 
 using System.IO;
+using NAudio.Wave;
+
 namespace winforCongitiveTexttoSpeech
 {
 	public partial class Form1 : Form
 	{
-		/// <summary>
-		/// This method is called once the audio returned from the service.
-		/// It will then attempt to play that audio file.
-		/// Note that the playback will fail if the output audio format is not pcm encoded.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="args">The <see cref="GenericEventArgs{Stream}"/> instance containing the event data.</param>
-		/// 
-		// readStream is the stream you need to read
-		// writeStream is the stream you want to write to
- 
-		private  void PlayAudio(object sender, GenericEventArgs<Stream> args)
+    private WaveFileReader waveReader;
+    private WaveOut output;
+
+    /// <summary>
+    /// This method is called once the audio returned from the service.
+    /// It will then attempt to play that audio file.
+    /// Note that the playback will fail if the output audio format is not pcm encoded.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="args">The <see cref="GenericEventArgs{Stream}"/> instance containing the event data.</param>
+    /// 
+    // readStream is the stream you need to read
+    // writeStream is the stream you want to write to
+
+    private  void PlayAudio(object sender, GenericEventArgs<Stream> args)
 		{ 
 			Stream readStream = args.EventData;
 			 
@@ -60,9 +65,12 @@ namespace winforCongitiveTexttoSpeech
         // https://stackoverflow.com/questions/22173273/play-sound-in-both-speaker-and-headset-wpf
         // http://mark-dot-net.blogspot.com/2011/05/naudio-audio-output-devices.html
 
-        SoundPlayer player = new System.Media.SoundPlayer(filename);
-        player.SoundLocationChanged += new EventHandler(this.player_LocationChanged);
-        player.PlaySync();
+
+        this.detectDevices(filename);
+
+        //SoundPlayer player = new System.Media.SoundPlayer(filename);
+        //player.SoundLocationChanged += new EventHandler(this.player_LocationChanged);
+        //player.PlaySync();
 				 
 			}
 			catch (Exception EX)
@@ -178,5 +186,65 @@ namespace winforCongitiveTexttoSpeech
 		{
 			//cboLocale.SelectedIndex = cboServiceName.SelectedIndex;
 		}
-	}
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+      //detectDevices("");
+    }
+
+    public void detectDevices(string filename)
+    {
+      int waveOutDevices = WaveOut.DeviceCount;
+      switch (waveOutDevices)
+      {
+        case 1:
+          var wave1 = new WaveOut();
+          wave1.DeviceNumber = 0;
+          playSound(0, filename);
+
+          break;
+        case 2:
+          var wave2 = new WaveOut();
+          wave2.DeviceNumber = 0;
+          playSound(0, filename);
+
+          var wave3 = new WaveOut();
+          wave3.DeviceNumber = 1;
+          playSound(1, filename);
+
+          break;
+
+      }
+    }
+
+    public void playSound(int deviceNumber, string fileName)
+    {
+      disposeWave();// stop previous sounds before starting
+      waveReader = new NAudio.Wave.WaveFileReader(fileName);
+      var waveOut = new NAudio.Wave.WaveOut();
+      waveOut.DeviceNumber = deviceNumber;
+      output = waveOut;
+      output.Init(waveReader);
+      output.Play();
+    }
+
+
+    public void disposeWave()
+    {
+      if (output != null)
+      {
+        if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing)
+        {
+          output.Stop();
+          output.Dispose();
+          output = null;
+        }
+      }
+      if (waveReader != null)
+      {
+        waveReader.Dispose();
+        waveReader = null;
+      }
+    }
+  }
 }
